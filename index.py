@@ -30,17 +30,21 @@ text = res.text #テキストで取得する
 # ここからデータの抽出
 soup = BeautifulSoup(text, "html.parser")
 elms = soup.select('.wikitable td')
-result = [["name", "record", "country", "date", "throne"]]
+result = [["name", "record", "country", "throne"]]
 for elm in elms:
-    throne = elm.select('b')
+    throne = elm.select_one('b')
+    if (throne):
+        print(throne.text)
+    else:
+        print("none")
 
-    country = elm.select_one("a:first-child")
-    if (country):
-        print(country.text)
-    name = elm.select_one("a:last-child")
-    print(name)
-    # print(name)
-    # print(country["title"])
-    # print(elm.get_text(strip=True))
-    # print(name)
-    # print(throne)
+
+    country = elm.select_one("a:first-of-type")
+    # if (country):
+    #     print(country["title"])
+    name = elm.select_one('a:last-of-type')
+    # if (name):
+    #     print(name.text)
+    record = elm.get_text(strip=True)
+    # if (record):
+    #     print(record[-13:]) #最後からのテキストを抜き出す
