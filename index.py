@@ -1,7 +1,7 @@
 import requests
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
-import re
+import re #正規表現
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
@@ -33,18 +33,19 @@ elms = soup.select('.wikitable td')
 result = [["name", "record", "country", "throne"]]
 for elm in elms:
     throne = elm.select_one('b')
-    if (throne):
-        print(throne.text)
-    else:
-        print("none")
-
+    throne = throne.text if (throne) else "none"
 
     country = elm.select_one("a:first-of-type")
-    # if (country):
-    #     print(country["title"])
+    res = re.match("の旗", country)
+    if (res):
+        print("マッチしました")
+    country = country["title"] if (country) else "none"
+
     name = elm.select_one('a:last-of-type')
-    # if (name):
-    #     print(name.text)
+    name = name.text if (name) else "none"
+
     record = elm.get_text(strip=True)
-    # if (record):
-    #     print(record[-13:]) #最後からのテキストを抜き出す
+    record = record[-13:] if (record) else "none" #最後からのテキストを抜き出す
+
+    result.append([name, record, country, throne])
+print(result[1:3])
